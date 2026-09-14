@@ -153,7 +153,8 @@ Elegí un contador en lugar de un timestamp porque dos visitas dentro del mismo 
 ### Buscador
 
 - La lista inicial usa `useInfiniteQuery` con `limit=30` y `offset += 30`. Un sentinel con `IntersectionObserver` (con el contenedor scrollable del modal como `root`) pide la siguiente página 400 px antes de llegar al final.
-- La búsqueda es por nombre exacto contra `GET /pokemon/{name}`. El término se normaliza (minúsculas, sin acentos ni espacios) y se aplica _debounce_ de 350 ms. Un 404 se traduce al estado "No encontrado"; otros errores muestran un mensaje con reintento y no se reintenta un 404.
+- La búsqueda es por nombre exacto contra `GET /pokemon/{name}`, como pide el enunciado. El término se normaliza (minúsculas, sin acentos ni espacios) y se aplica _debounce_ de 350 ms. Un 404 se traduce al estado "No encontrado"; otros errores muestran un mensaje con reintento y no se reintenta un 404.
+- Como nadie recuerda el nombre completo de 1300 Pokémon, debajo del resultado exacto muestro **sugerencias por fragmento** calculadas en el cliente: la primera vez que se escribe algo se descarga el índice de nombres (`GET /pokemon?limit=2000`, unos 100 KB, cacheado con `staleTime: Infinity`) y se filtra en memoria priorizando los nombres que empiezan por el término. Escribir `bul` muestra "No encontrado" en la coincidencia exacta y Bulbasaur como sugerencia, sin ninguna petición extra por tecla.
 - El modal es fullscreen, bloquea el scroll del body, se abre con `/` y se cierra con `Esc`.
 
 ### Home

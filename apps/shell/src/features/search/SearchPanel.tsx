@@ -3,8 +3,8 @@ import { motion } from 'motion/react'
 import { useRef, useState } from 'react'
 import { normalizeSearchTerm } from '@pokedex/shared'
 import { useDebouncedValue } from '@/hooks/useDebouncedValue'
-import { ExactSearchResult } from './ExactSearchResult'
 import { InfinitePokemonList } from './InfinitePokemonList'
+import { SearchResults } from './SearchResults'
 
 interface SearchPanelProps {
   onClose: () => void
@@ -33,7 +33,7 @@ export function SearchPanel({ onClose, onSelect }: SearchPanelProps) {
             type="search"
             value={term}
             onChange={(event) => setTerm(event.target.value)}
-            placeholder="Buscar un Pokémon (nombre exacto, ej. pikachu)"
+            placeholder="Buscar un Pokémon (ej. pikachu)"
             autoComplete="off"
             autoFocus
             spellCheck={false}
@@ -53,7 +53,7 @@ export function SearchPanel({ onClose, onSelect }: SearchPanelProps) {
       <div ref={scrollRef} className="flex-1 overflow-y-auto overscroll-contain">
         <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6">
           {normalizedTerm ? (
-            <ExactSearchResult term={normalizedTerm} onSelect={onSelect} />
+            <SearchResults term={normalizedTerm} onSelect={onSelect} />
           ) : (
             <InfinitePokemonList root={scrollRef} onSelect={onSelect} />
           )}

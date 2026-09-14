@@ -64,6 +64,26 @@ export async function fetchPokemonPage(offset: number, signal?: AbortSignal): Pr
   }
 }
 
+const INDEX_PAGE_SIZE = 2000
+const MAX_SUGGESTIONS = 12
+
+export async function fetchPokemonIndex(signal?: AbortSignal): Promise<PokemonSummary[]> {
+  const data = await request<PokemonListResponse>(
+    `/pokemon?limit=${INDEX_PAGE_SIZE}&offset=0`,
+    signal,
+  )
+  return data.results.map(toSummary)
+}
+
+export function searchPokemonIndex(index: PokemonSummary[], term: string): PokemonSummary[] {
+  if (!term) return []
+  const startsWith = index.filter((pokemon) => pokemon.name.startsWith(term))
+  const contains = index.filter(
+    (pokemon) => !pokemon.name.startsWith(term) && pokemon.name.includes(term),
+  )
+  return [...startsWith, ...contains].slice(0, MAX_SUGGESTIONS)
+}
+
 export async function fetchPokemon(nameOrId: string | number, signal?: AbortSignal) {
   const data = await request<PokemonResponse>(`/pokemon/${nameOrId}`, signal)
   return toDetail(data)
