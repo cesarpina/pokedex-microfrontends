@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 interface PokemonImageProps {
   src: string
@@ -7,15 +7,22 @@ interface PokemonImageProps {
 }
 
 export function PokemonImage({ src, alt, className = '' }: PokemonImageProps) {
+  const ref = useRef<HTMLImageElement>(null)
   const [loaded, setLoaded] = useState(false)
+
+  useEffect(() => {
+    if (ref.current?.complete) setLoaded(true)
+  }, [src])
 
   return (
     <img
+      ref={ref}
       src={src}
       alt={alt}
       onLoad={() => setLoaded(true)}
-      className={`${className} transition-all duration-700 ease-out ${
-        loaded ? 'scale-100 opacity-100 blur-0' : 'scale-90 opacity-0 blur-md'
+      onError={() => setLoaded(true)}
+      className={`${className} transition-[opacity,transform] duration-700 ease-out ${
+        loaded ? 'scale-100 opacity-100' : 'scale-90 opacity-0'
       }`}
     />
   )

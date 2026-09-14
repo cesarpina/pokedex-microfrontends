@@ -19,20 +19,6 @@ interface CompareViewProps {
 
 const MAX_BASE_STAT = 255
 
-const container = {
-  hidden: { opacity: 0, y: 24 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] as const, staggerChildren: 0.07 },
-  },
-}
-
-const item = {
-  hidden: { opacity: 0, y: 14 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] as const } },
-}
-
 function totalStats(pokemon: PokemonDetail) {
   return pokemon.stats.reduce((sum, stat) => sum + stat.value, 0)
 }
@@ -52,22 +38,17 @@ export function CompareView({ left, right, onBack, onReset }: CompareViewProps) 
   const rightWins = rows.filter((row) => row.right > row.left).length
 
   return (
-    <motion.article
-      variants={container}
-      initial="hidden"
-      animate="visible"
-      className="relative overflow-hidden rounded-3xl bg-surface shadow-card ring-1 ring-line"
-    >
+    <article className="relative animate-pop overflow-hidden rounded-3xl bg-surface shadow-card ring-1 ring-line">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-50 blur-3xl"
+        className="pointer-events-none absolute inset-0 opacity-40"
         style={{
-          background: `linear-gradient(100deg, ${leftColor} 0%, transparent 45%, transparent 55%, ${rightColor} 100%)`,
+          background: `radial-gradient(70% 60% at 0% 20%, ${leftColor}, transparent 70%), radial-gradient(70% 60% at 100% 20%, ${rightColor}, transparent 70%)`,
         }}
       />
 
       <div className="relative space-y-8 p-6 sm:p-10">
-        <motion.header variants={item} className="text-center">
+        <header className="animate-pop text-center" style={{ animationDelay: '0.05s' }}>
           <h1 className="font-display text-3xl font-extrabold tracking-tight sm:text-4xl">
             Comparación
           </h1>
@@ -81,17 +62,24 @@ export function CompareView({ left, right, onBack, onReset }: CompareViewProps) 
               rightTotal={rightTotal}
             />
           </p>
-        </motion.header>
+        </header>
 
-        <motion.div variants={item} className="grid items-center gap-6 sm:grid-cols-[1fr_auto_1fr]">
+        <div
+          className="grid animate-pop items-center gap-6 sm:grid-cols-[1fr_auto_1fr]"
+          style={{ animationDelay: '0.12s' }}
+        >
           <Contender pokemon={left} color={leftColor} />
           <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-ink font-display text-lg font-extrabold text-canvas shadow-glow">
             VS
           </span>
           <Contender pokemon={right} color={rightColor} />
-        </motion.div>
+        </div>
 
-        <motion.section variants={item} aria-label="Estadísticas base" className="space-y-3">
+        <section
+          aria-label="Estadísticas base"
+          className="animate-pop space-y-3"
+          style={{ animationDelay: '0.2s' }}
+        >
           {rows.map((row, index) => (
             <StatRow
               key={row.name}
@@ -113,16 +101,22 @@ export function CompareView({ left, right, onBack, onReset }: CompareViewProps) 
             delay={0.65}
             emphasis
           />
-        </motion.section>
+        </section>
 
-        <motion.dl variants={item} className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <dl
+          className="grid animate-pop grid-cols-2 gap-3 sm:grid-cols-4"
+          style={{ animationDelay: '0.3s' }}
+        >
           <Fact label="Altura" value={`${left.height / 10} m`} />
           <Fact label="Peso" value={`${left.weight / 10} kg`} />
           <Fact label="Altura" value={`${right.height / 10} m`} />
           <Fact label="Peso" value={`${right.weight / 10} kg`} />
-        </motion.dl>
+        </dl>
 
-        <motion.div variants={item} className="flex flex-wrap justify-center gap-3 pt-2">
+        <div
+          className="flex animate-pop flex-wrap justify-center gap-3 pt-2"
+          style={{ animationDelay: '0.4s' }}
+        >
           <button
             type="button"
             onClick={onBack}
@@ -139,9 +133,9 @@ export function CompareView({ left, right, onBack, onReset }: CompareViewProps) 
             <RotateCcw className="h-4 w-4" />
             Nueva comparación
           </button>
-        </motion.div>
+        </div>
       </div>
-    </motion.article>
+    </article>
   )
 }
 
@@ -174,8 +168,8 @@ function Contender({ pokemon, color }: { pokemon: PokemonDetail; color: string }
       <div className="relative">
         <div
           aria-hidden
-          className="absolute inset-0 rounded-full opacity-40 blur-2xl"
-          style={{ backgroundColor: color }}
+          className="absolute -inset-6 rounded-full opacity-50"
+          style={{ background: `radial-gradient(circle, ${color} 0%, transparent 70%)` }}
         />
         <PokemonImage
           src={pokemon.image}

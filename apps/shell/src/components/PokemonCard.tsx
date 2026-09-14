@@ -1,6 +1,6 @@
 import { Check, Scale } from 'lucide-react'
 import { motion } from 'motion/react'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   formatPokedexNumber,
   formatPokemonName,
@@ -22,10 +22,15 @@ export function PokemonCard({
   delay = 0,
   onClick,
 }: PokemonCardProps) {
+  const imageRef = useRef<HTMLImageElement>(null)
   const [loaded, setLoaded] = useState(false)
   const compared = useCompareStore(selectIsCompared(pokemon.name))
   const toggleCompare = useCompareStore((state) => state.toggle)
   const label = formatPokemonName(pokemon.name)
+
+  useEffect(() => {
+    if (imageRef.current?.complete) setLoaded(true)
+  }, [pokemon.image])
 
   return (
     <motion.div
@@ -45,16 +50,18 @@ export function PokemonCard({
       >
         <span
           aria-hidden
-          className="absolute inset-x-0 top-0 h-24 opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-50"
+          className="absolute inset-x-0 top-0 h-28 opacity-0 transition-opacity duration-500 group-hover:opacity-40"
           style={{ background: `radial-gradient(circle at 50% 0%, ${accent}, transparent 70%)` }}
         />
         <span className="relative flex h-24 w-24 items-center justify-center">
           {!loaded && <span className="skeleton absolute inset-2 rounded-full" />}
           <img
+            ref={imageRef}
             src={pokemon.image}
             alt=""
             loading="lazy"
             onLoad={() => setLoaded(true)}
+            onError={() => setLoaded(true)}
             className={`h-full w-full object-contain drop-shadow-lg transition-all duration-500 ease-spring group-hover:scale-110 group-hover:-rotate-3 ${
               loaded ? 'opacity-100' : 'opacity-0'
             }`}

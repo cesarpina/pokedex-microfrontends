@@ -1,5 +1,4 @@
 import { ArrowLeft, Ruler, Sparkles, Weight } from 'lucide-react'
-import { motion } from 'motion/react'
 import {
   formatPokedexNumber,
   formatPokemonName,
@@ -16,72 +15,58 @@ interface DetailViewProps {
   onBack: () => void
 }
 
-const container = {
-  hidden: { opacity: 0, y: 24 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] as const, staggerChildren: 0.08 },
-  },
-}
-
-const item = {
-  hidden: { opacity: 0, y: 16 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] as const } },
-}
-
 export function DetailView({ pokemon, onBack }: DetailViewProps) {
   const primaryColor = typeColor(pokemon.types[0])
   const totalStats = pokemon.stats.reduce((sum, stat) => sum + stat.value, 0)
 
   return (
-    <motion.article
-      variants={container}
-      initial="hidden"
-      animate="visible"
-      className="relative overflow-hidden rounded-3xl bg-surface shadow-card ring-1 ring-line"
-    >
+    <article className="relative animate-pop overflow-hidden rounded-3xl bg-surface shadow-card ring-1 ring-line">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-72 opacity-60 blur-3xl"
+        className="pointer-events-none absolute inset-x-0 top-0 h-80 opacity-50"
         style={{
-          background: `radial-gradient(60% 80% at 50% 0%, ${primaryColor}, transparent 70%)`,
+          background: `radial-gradient(60% 70% at 50% 0%, ${primaryColor}, transparent 70%)`,
         }}
       />
 
       <div className="relative grid gap-8 p-6 sm:p-10 md:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
         <div className="flex flex-col items-center gap-6">
-          <motion.div variants={item} className="relative">
+          <div className="relative animate-pop" style={{ animationDelay: '0.05s' }}>
             <div
               aria-hidden
-              className="absolute inset-0 rounded-full opacity-40 blur-2xl"
-              style={{ backgroundColor: primaryColor }}
+              className="absolute -inset-6 rounded-full opacity-50"
+              style={{
+                background: `radial-gradient(circle, ${primaryColor} 0%, transparent 70%)`,
+              }}
             />
             <PokemonImage
               src={pokemon.image}
               alt={formatPokemonName(pokemon.name)}
               className="relative h-56 w-56 animate-float object-contain drop-shadow-2xl sm:h-64 sm:w-64"
             />
-          </motion.div>
+          </div>
 
-          <motion.div variants={item} className="flex flex-wrap justify-center gap-2">
+          <div
+            className="flex animate-pop flex-wrap justify-center gap-2"
+            style={{ animationDelay: '0.15s' }}
+          >
             {pokemon.types.map((type) => (
               <TypeBadge key={type} type={type} />
             ))}
-          </motion.div>
+          </div>
         </div>
 
         <div className="flex flex-col gap-6">
-          <motion.header variants={item}>
+          <header className="animate-pop" style={{ animationDelay: '0.1s' }}>
             <span className="font-display text-sm font-semibold tracking-[0.3em] text-muted uppercase">
               {formatPokedexNumber(pokemon.id)}
             </span>
             <h1 className="font-display text-4xl font-extrabold tracking-tight sm:text-5xl">
               {formatPokemonName(pokemon.name)}
             </h1>
-          </motion.header>
+          </header>
 
-          <motion.dl variants={item} className="grid grid-cols-3 gap-3">
+          <dl className="grid animate-pop grid-cols-3 gap-3" style={{ animationDelay: '0.2s' }}>
             <Fact
               icon={<Ruler className="h-4 w-4" />}
               label="Altura"
@@ -97,9 +82,13 @@ export function DetailView({ pokemon, onBack }: DetailViewProps) {
               label="Total"
               value={String(totalStats)}
             />
-          </motion.dl>
+          </dl>
 
-          <motion.section variants={item} aria-labelledby="stats-title" className="space-y-3">
+          <section
+            aria-labelledby="stats-title"
+            className="animate-pop space-y-3"
+            style={{ animationDelay: '0.3s' }}
+          >
             <h2 id="stats-title" className="font-display text-lg font-bold">
               Estadísticas base
             </h2>
@@ -113,9 +102,9 @@ export function DetailView({ pokemon, onBack }: DetailViewProps) {
                 />
               ))}
             </ul>
-          </motion.section>
+          </section>
 
-          <motion.section variants={item} className="space-y-2">
+          <section className="animate-pop space-y-2" style={{ animationDelay: '0.4s' }}>
             <h2 className="font-display text-lg font-bold">Habilidades</h2>
             <ul className="flex flex-wrap gap-2">
               {pokemon.abilities.map((ability) => (
@@ -127,9 +116,9 @@ export function DetailView({ pokemon, onBack }: DetailViewProps) {
                 </li>
               ))}
             </ul>
-          </motion.section>
+          </section>
 
-          <motion.div variants={item} className="flex flex-wrap gap-3 pt-2">
+          <div className="flex animate-pop flex-wrap gap-3 pt-2" style={{ animationDelay: '0.5s' }}>
             <button
               type="button"
               onClick={onBack}
@@ -139,10 +128,10 @@ export function DetailView({ pokemon, onBack }: DetailViewProps) {
               Regresar
             </button>
             <CompareToggle pokemon={{ id: pokemon.id, name: pokemon.name, image: pokemon.image }} />
-          </motion.div>
+          </div>
         </div>
       </div>
-    </motion.article>
+    </article>
   )
 }
 
