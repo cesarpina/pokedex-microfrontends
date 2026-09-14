@@ -1,13 +1,13 @@
 import { Loader2 } from 'lucide-react'
 import type { RefObject } from 'react'
-import { SEARCH_PAGE_SIZE, usePokemonList } from '@pokedex/shared'
+import { SEARCH_PAGE_SIZE, usePokemonList, type PokemonSummary } from '@pokedex/shared'
 import { InlineError } from '@/components/InlineError'
 import { PokemonCard, PokemonCardSkeleton } from '@/components/PokemonCard'
 import { useIntersection } from '@/hooks/useIntersection'
 
 interface InfinitePokemonListProps {
   root: RefObject<HTMLElement | null>
-  onSelect: (name: string) => void
+  onSelect: (pokemon: PokemonSummary) => void
 }
 
 export function InfinitePokemonList({ root, onSelect }: InfinitePokemonListProps) {
@@ -52,7 +52,7 @@ export function InfinitePokemonList({ root, onSelect }: InfinitePokemonListProps
             <PokemonCard
               pokemon={pokemon}
               delay={(index % SEARCH_PAGE_SIZE) * 0.02}
-              onClick={() => onSelect(pokemon.name)}
+              onClick={() => onSelect(pokemon)}
             />
           </li>
         ))}

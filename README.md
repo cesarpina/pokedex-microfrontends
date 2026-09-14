@@ -182,7 +182,7 @@ Al entrar se consulta `GET /pokemon?limit=1` (para el total de Pokémon) y `GET 
 
 ### Comparador
 
-Cada tarjeta y el detalle tienen un botón para añadir el Pokémon a la comparación. La selección vive en un store de Zustand (`pokedex.compare`, máximo dos, el más antiguo se descarta al elegir un tercero) que comparten shell y microfrontends. Mientras haya algo seleccionado, el shell muestra una bandeja flotante con los dos huecos y el botón "Comparar", que navega a `/compare/:a/:b`. La vista de comparación la expone el microfrontend de detalle como segundo módulo federado (`./PokemonCompare`) porque reutiliza sus componentes de imagen, tipos y barras; recibe los dos nombres por props y reutiliza las mismas queries cacheadas del detalle.
+Cada tarjeta y el detalle tienen un botón para añadir el Pokémon a la comparación. La selección vive en un store de Zustand (`pokedex.compare`, máximo dos, el más antiguo se descarta al elegir un tercero) que comparten shell y microfrontends. Mientras haya algo seleccionado, el shell muestra una bandeja flotante con los dos huecos y el botón "Comparar", que navega a `/compare/:a/:b`. El hueco vacío abre el buscador en modo selección: al elegir un Pokémon ahí no se abre su detalle, se añade a la comparación y, al completar los dos, se salta directo a la vista comparativa. La vista de comparación la expone el microfrontend de detalle como segundo módulo federado (`./PokemonCompare`) porque reutiliza sus componentes de imagen, tipos y barras; recibe los dos nombres por props y reutiliza las mismas queries cacheadas del detalle.
 
 ### Imágenes
 

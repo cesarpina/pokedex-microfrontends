@@ -7,6 +7,7 @@ export const COMPARE_SLOTS = 2
 interface CompareState {
   selected: PokemonSummary[]
   toggle: (pokemon: PokemonSummary) => void
+  select: (pokemon: PokemonSummary) => void
   remove: (name: string) => void
   clear: () => void
 }
@@ -21,6 +22,12 @@ export const useCompareStore = create<CompareState>()(
           if (state.selected.some((entry) => entry.name === pokemon.name)) {
             return { selected: state.selected.filter((entry) => entry.name !== pokemon.name) }
           }
+          return { selected: [...state.selected, pokemon].slice(-COMPARE_SLOTS) }
+        }),
+
+      select: (pokemon) =>
+        set((state) => {
+          if (state.selected.some((entry) => entry.name === pokemon.name)) return state
           return { selected: [...state.selected, pokemon].slice(-COMPARE_SLOTS) }
         }),
 

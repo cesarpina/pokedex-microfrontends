@@ -48,7 +48,7 @@ export function CompareTray() {
                 {pokemon ? (
                   <Slot pokemon={pokemon} onRemove={() => remove(pokemon.name)} />
                 ) : (
-                  <EmptySlot onClick={openSearch} />
+                  <EmptySlot onClick={() => openSearch('compare')} />
                 )}
               </li>
             ))}

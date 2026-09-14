@@ -6,13 +6,14 @@ import {
   typeColor,
   usePokemon,
   usePokemonIndex,
+  type PokemonSummary,
 } from '@pokedex/shared'
 import { InlineError } from '@/components/InlineError'
 import { PokemonCard, PokemonCardSkeleton } from '@/components/PokemonCard'
 
 interface SearchResultsProps {
   term: string
-  onSelect: (name: string) => void
+  onSelect: (pokemon: PokemonSummary) => void
 }
 
 export function SearchResults({ term, onSelect }: SearchResultsProps) {
@@ -44,7 +45,7 @@ export function SearchResults({ term, onSelect }: SearchResultsProps) {
             <PokemonCard
               pokemon={exact.data}
               accent={typeColor(exact.data.types[0])}
-              onClick={() => onSelect(exact.data.name)}
+              onClick={() => onSelect(exact.data)}
             />
           </div>
         )}
@@ -65,7 +66,7 @@ export function SearchResults({ term, onSelect }: SearchResultsProps) {
                 <PokemonCard
                   pokemon={pokemon}
                   delay={position * 0.03}
-                  onClick={() => onSelect(pokemon.name)}
+                  onClick={() => onSelect(pokemon)}
                 />
               </li>
             ))}

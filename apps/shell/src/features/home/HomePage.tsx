@@ -36,7 +36,7 @@ export function HomePage() {
 
         <button
           type="button"
-          onClick={openSearch}
+          onClick={() => openSearch()}
           className="group flex w-full items-center gap-3 rounded-2xl bg-surface px-5 py-4 text-left text-muted shadow-card ring-1 ring-line transition-all duration-300 hover:-translate-y-0.5 hover:ring-accent/50 focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
         >
           <Search className="h-5 w-5 transition-transform duration-300 group-hover:scale-110" />

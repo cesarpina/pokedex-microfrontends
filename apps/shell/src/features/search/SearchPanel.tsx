@@ -1,18 +1,26 @@
-import { Search, X } from 'lucide-react'
+import { Scale, Search, X } from 'lucide-react'
 import { motion } from 'motion/react'
 import { useRef, useState } from 'react'
-import { normalizeSearchTerm } from '@pokedex/shared'
+import {
+  formatPokemonName,
+  normalizeSearchTerm,
+  useCompareStore,
+  type PokemonSummary,
+} from '@pokedex/shared'
 import { useDebouncedValue } from '@/hooks/useDebouncedValue'
 import { InfinitePokemonList } from './InfinitePokemonList'
 import { SearchResults } from './SearchResults'
+import type { SearchMode } from './search-store'
 
 interface SearchPanelProps {
+  mode: SearchMode
   onClose: () => void
-  onSelect: (name: string) => void
+  onSelect: (pokemon: PokemonSummary) => void
 }
 
-export function SearchPanel({ onClose, onSelect }: SearchPanelProps) {
+export function SearchPanel({ mode, onClose, onSelect }: SearchPanelProps) {
   const [term, setTerm] = useState('')
+  const compareWith = useCompareStore((state) => state.selected[0])
   const debouncedTerm = useDebouncedValue(term)
   const normalizedTerm = normalizeSearchTerm(debouncedTerm)
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -52,6 +60,19 @@ export function SearchPanel({ onClose, onSelect }: SearchPanelProps) {
 
       <div ref={scrollRef} className="flex-1 overflow-y-auto overscroll-contain">
         <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6">
+          {mode === 'compare' && compareWith && (
+            <motion.p
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-6 flex items-center gap-3 rounded-2xl bg-accent/10 px-4 py-3 text-sm ring-1 ring-accent/30"
+            >
+              <Scale className="h-4 w-4 shrink-0 text-accent" />
+              <span>
+                Elige el Pokémon que quieres comparar con{' '}
+                <strong className="text-ink">{formatPokemonName(compareWith.name)}</strong>.
+              </span>
+            </motion.p>
+          )}
           {normalizedTerm ? (
             <SearchResults term={normalizedTerm} onSelect={onSelect} />
           ) : (
