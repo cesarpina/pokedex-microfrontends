@@ -5,7 +5,7 @@ import { InlineError } from '@/components/InlineError'
 import { useSearchStore } from '@/features/search/search-store'
 import { CategorySection } from './CategorySection'
 import { useHomeFilterStore } from './home-filter-store'
-import { PokedexStats } from './PokedexStats'
+import { PokedexSummary } from './PokedexSummary'
 import { TypeFilter } from './TypeFilter'
 
 export function HomePage() {
@@ -25,13 +25,16 @@ export function HomePage() {
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         className="space-y-5"
       >
-        <div>
-          <h1 className="font-display text-3xl font-extrabold tracking-tight sm:text-4xl">
-            Explora la <span className="text-gradient">Pokédex</span>
-          </h1>
-          <p className="mt-1 text-muted">
-            Descubre Pokémon por categoría, búscalos por su nombre o compáralos entre sí.
-          </p>
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <h1 className="font-display text-3xl font-extrabold tracking-tight sm:text-4xl">
+              Explora la <span className="text-gradient">Pokédex</span>
+            </h1>
+            <p className="mt-1 text-muted">
+              Descubre Pokémon por categoría, búscalos por su nombre o compáralos entre sí.
+            </p>
+          </div>
+          <PokedexSummary overview={overview.data} />
         </div>
 
         <button
@@ -45,8 +48,6 @@ export function HomePage() {
             /
           </kbd>
         </button>
-
-        <PokedexStats overview={overview.data} />
 
         <div className="space-y-3">
           <h2 className="flex items-center gap-2 text-sm font-semibold text-muted">

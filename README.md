@@ -15,22 +15,22 @@ Reto técnico frontend: una Pokédex construida con **React 19 + Vite + Module F
 <details>
 <summary>Más capturas</summary>
 
-|                        Login                         |         Buscador (modal fullscreen)          |
-| :--------------------------------------------------: | :------------------------------------------: |
-|         ![Login](docs/screenshots/login.png)         |  ![Buscador](docs/screenshots/buscador.png)  |
-|                  **Detalle (MF 1)**                  |         **Historial (MF 2) + toast**         |
-|       ![Detalle](docs/screenshots/detalle.png)       | ![Historial](docs/screenshots/historial.png) |
-|              **Búsqueda sin resultado**              |           **Mobile, tema oscuro**            |
-| ![No encontrado](docs/screenshots/no-encontrado.png) | ![Mobile](docs/screenshots/mobile-dark.png)  |
-|                **Comparador (MF 1)**                 |             **Filtros por tipo**             |
-|    ![Comparador](docs/screenshots/comparador.png)    |   ![Filtros](docs/screenshots/filtros.png)   |
+|                        Login                         |          Buscador (modal fullscreen)           |
+| :--------------------------------------------------: | :--------------------------------------------: |
+|         ![Login](docs/screenshots/login.png)         |   ![Buscador](docs/screenshots/buscador.png)   |
+|                  **Detalle (MF 1)**                  |          **Historial (MF 2) + toast**          |
+|       ![Detalle](docs/screenshots/detalle.png)       |  ![Historial](docs/screenshots/historial.png)  |
+|              **Búsqueda sin resultado**              |             **Mobile, tema claro**             |
+| ![No encontrado](docs/screenshots/no-encontrado.png) |  ![Mobile](docs/screenshots/mobile-dark.png)   |
+|                **Comparador (MF 1)**                 |             **Home, tema oscuro**              |
+|    ![Comparador](docs/screenshots/comparador.png)    | ![Home oscuro](docs/screenshots/home-dark.png) |
 
 </details>
 
 ## Funcionalidades
 
 - **Login** con sesión persistida y rutas protegidas.
-- **Home** con estadísticas reales de la API (cuántos Pokémon y tipos existen), filtros por tipo y listado de 10 Pokémon por categoría.
+- **Home** con un resumen compacto de la API (cuántos Pokémon y tipos existen, tus visitas), filtros por tipo que en móvil se pliegan a una fila con "Ver todas", y listado de 10 Pokémon por categoría.
 - **Buscador** en modal fullscreen: 30 Pokémon iniciales con scroll infinito, búsqueda por nombre exacto y sugerencias por fragmento.
 - **Detalle** (microfrontend 1): imagen SVG, tipos, estadísticas animadas, habilidades, altura y peso.
 - **Comparador** (microfrontend 1): se eligen dos Pokémon desde cualquier tarjeta o desde el detalle y se comparan estadística por estadística.
