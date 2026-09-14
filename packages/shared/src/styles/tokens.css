@@ -1,3 +1,7 @@
+@source '../../../../apps/shell/src';
+@source '../../../../apps/pokemon-detail/src';
+@source '../../../../apps/pokemon-history/src';
+
 @custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
 
 :root {

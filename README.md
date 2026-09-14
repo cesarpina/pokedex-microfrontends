@@ -137,6 +137,7 @@ Dentro de cada app el código se organiza por feature (`features/auth`, `feature
 - Los remotos reciben solo props (`name`, `onBack`, `onSelect`) y no conocen el router del shell. Los contratos de props viven en `packages/shared/src/contracts.ts`, así shell y remotos comparten el mismo tipo y el `remotes.d.ts` del shell queda tipado.
 - `react`, `react-dom`, `@tanstack/react-query`, `zustand` y `@pokedex/shared` se declaran como **singletons** en la federación. Es lo que permite que el `QueryClientProvider` del shell sirva a los remotos y que los stores de Zustand sean una única instancia en toda la página.
 - Los estilos de cada remoto viajan con el módulo expuesto (importa `remote.css`: tema + utilidades, sin preflight). El shell aporta el reset y los estilos base una sola vez. Los tokens de color, tipografía y animaciones son compartidos, así que los tres se ven como una sola aplicación y responden al mismo cambio de tema.
+- Las tres apps compilan el mismo conjunto de utilidades de Tailwind (`@source` apunta a los `src` de las tres en `tokens.css`). Sin esto, la hoja de un remoto cargada más tarde redefine utilidades base (`grid-cols-2`) y pisa las variantes responsive del shell (`lg:grid-cols-5`) que van en la misma capa. Con hojas idénticas el orden de carga deja de importar; el coste son unos KB extra por app.
 
 ### Paquete `@pokedex/shared`
 
