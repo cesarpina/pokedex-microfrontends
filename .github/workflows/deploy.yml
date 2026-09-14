@@ -39,6 +39,7 @@ jobs:
         run: pnpm --filter @pokedex/shell build
         env:
           VITE_BASE_PATH: /pokedex-microfrontends/
+          VITE_BUILD_ID: ${{ github.sha }}
           VITE_POKEMON_DETAIL_URL: ${{ env.SITE_URL }}/remotes/detail
           VITE_POKEMON_HISTORY_URL: ${{ env.SITE_URL }}/remotes/history
 

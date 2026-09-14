@@ -10,6 +10,8 @@ export default defineConfig(({ mode }) => {
   const detailUrl = env.VITE_POKEMON_DETAIL_URL ?? `http://localhost:${remotePorts.pokemonDetail}`
   const historyUrl =
     env.VITE_POKEMON_HISTORY_URL ?? `http://localhost:${remotePorts.pokemonHistory}`
+  const buildId = env.VITE_BUILD_ID ?? Date.now().toString(36)
+  const remoteEntry = (baseUrl: string) => `${baseUrl}/remoteEntry.js?v=${buildId}`
 
   return {
     base: env.VITE_BASE_PATH ?? '/',
@@ -22,12 +24,12 @@ export default defineConfig(({ mode }) => {
           pokemonDetail: {
             type: 'module',
             name: 'pokemonDetail',
-            entry: `${detailUrl}/remoteEntry.js`,
+            entry: remoteEntry(detailUrl),
           },
           pokemonHistory: {
             type: 'module',
             name: 'pokemonHistory',
-            entry: `${historyUrl}/remoteEntry.js`,
+            entry: remoteEntry(historyUrl),
           },
         },
         shared: sharedDependencies,
