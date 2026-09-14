@@ -1,6 +1,13 @@
+import { Check, Scale } from 'lucide-react'
 import { motion } from 'motion/react'
 import { useState } from 'react'
-import { formatPokedexNumber, formatPokemonName, type PokemonSummary } from '@pokedex/shared'
+import {
+  formatPokedexNumber,
+  formatPokemonName,
+  selectIsCompared,
+  useCompareStore,
+  type PokemonSummary,
+} from '@pokedex/shared'
 
 interface PokemonCardProps {
   pokemon: PokemonSummary
@@ -16,45 +23,66 @@ export function PokemonCard({
   onClick,
 }: PokemonCardProps) {
   const [loaded, setLoaded] = useState(false)
+  const compared = useCompareStore(selectIsCompared(pokemon.name))
+  const toggleCompare = useCompareStore((state) => state.toggle)
+  const label = formatPokemonName(pokemon.name)
 
   return (
-    <motion.button
-      type="button"
-      onClick={onClick}
+    <motion.div
       initial={{ opacity: 0, y: 18 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, delay, ease: [0.22, 1, 0.36, 1] }}
       whileHover={{ y: -6 }}
-      whileTap={{ scale: 0.97 }}
-      className="group relative flex w-full flex-col items-center gap-2 overflow-hidden rounded-2xl bg-surface p-4 text-center shadow-card ring-1 ring-line transition-shadow duration-300 hover:shadow-glow focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
-      aria-label={`Ver detalle de ${formatPokemonName(pokemon.name)}`}
+      className={`group relative overflow-hidden rounded-2xl bg-surface shadow-card ring-1 transition-shadow duration-300 hover:shadow-glow ${
+        compared ? 'ring-2 ring-accent' : 'ring-line'
+      }`}
     >
-      <span
-        aria-hidden
-        className="absolute inset-x-0 top-0 h-24 opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-50"
-        style={{ background: `radial-gradient(circle at 50% 0%, ${accent}, transparent 70%)` }}
-      />
-      <span className="relative flex h-24 w-24 items-center justify-center">
-        {!loaded && <span className="skeleton absolute inset-2 rounded-full" />}
-        <img
-          src={pokemon.image}
-          alt=""
-          loading="lazy"
-          onLoad={() => setLoaded(true)}
-          className={`h-full w-full object-contain drop-shadow-lg transition-all duration-500 ease-spring group-hover:scale-110 group-hover:-rotate-3 ${
-            loaded ? 'opacity-100' : 'opacity-0'
-          }`}
+      <button
+        type="button"
+        onClick={onClick}
+        aria-label={`Ver detalle de ${label}`}
+        className="flex w-full flex-col items-center gap-2 p-4 text-center focus-visible:outline-none"
+      >
+        <span
+          aria-hidden
+          className="absolute inset-x-0 top-0 h-24 opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-50"
+          style={{ background: `radial-gradient(circle at 50% 0%, ${accent}, transparent 70%)` }}
         />
-      </span>
-      <span className="relative">
-        <span className="block text-xs font-semibold tracking-widest text-muted">
-          {formatPokedexNumber(pokemon.id)}
+        <span className="relative flex h-24 w-24 items-center justify-center">
+          {!loaded && <span className="skeleton absolute inset-2 rounded-full" />}
+          <img
+            src={pokemon.image}
+            alt=""
+            loading="lazy"
+            onLoad={() => setLoaded(true)}
+            className={`h-full w-full object-contain drop-shadow-lg transition-all duration-500 ease-spring group-hover:scale-110 group-hover:-rotate-3 ${
+              loaded ? 'opacity-100' : 'opacity-0'
+            }`}
+          />
         </span>
-        <span className="block truncate font-display text-base font-bold">
-          {formatPokemonName(pokemon.name)}
+        <span className="relative">
+          <span className="block text-xs font-semibold tracking-widest text-muted">
+            {formatPokedexNumber(pokemon.id)}
+          </span>
+          <span className="block truncate font-display text-base font-bold">{label}</span>
         </span>
-      </span>
-    </motion.button>
+      </button>
+
+      <button
+        type="button"
+        aria-pressed={compared}
+        aria-label={compared ? `Quitar ${label} de la comparación` : `Comparar ${label}`}
+        title={compared ? 'Quitar de la comparación' : 'Comparar'}
+        onClick={() => toggleCompare(pokemon)}
+        className={`absolute top-2 right-2 flex h-8 w-8 items-center justify-center rounded-full shadow-md transition-all duration-300 focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none ${
+          compared
+            ? 'scale-100 bg-accent text-accent-ink opacity-100'
+            : 'scale-90 bg-surface text-muted opacity-0 ring-1 ring-line group-hover:scale-100 group-hover:opacity-100 hover:text-accent'
+        }`}
+      >
+        {compared ? <Check className="h-4 w-4" /> : <Scale className="h-4 w-4" />}
+      </button>
+    </motion.div>
   )
 }
 

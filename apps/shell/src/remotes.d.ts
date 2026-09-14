@@ -9,3 +9,9 @@ declare module 'pokemonHistory/PokemonHistory' {
   const PokemonHistory: React.ComponentType<PokemonHistoryProps>
   export default PokemonHistory
 }
+
+declare module 'pokemonDetail/PokemonCompare' {
+  import type { PokemonCompareProps } from '@pokedex/shared'
+  const PokemonCompare: React.ComponentType<PokemonCompareProps>
+  export default PokemonCompare
+}

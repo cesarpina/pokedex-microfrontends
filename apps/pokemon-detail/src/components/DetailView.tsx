@@ -6,6 +6,7 @@ import {
   typeColor,
   type PokemonDetail,
 } from '@pokedex/shared'
+import { CompareToggle } from './CompareToggle'
 import { PokemonImage } from './PokemonImage'
 import { StatBar } from './StatBar'
 import { TypeBadge } from './TypeBadge'
@@ -128,7 +129,7 @@ export function DetailView({ pokemon, onBack }: DetailViewProps) {
             </ul>
           </motion.section>
 
-          <motion.div variants={item} className="pt-2">
+          <motion.div variants={item} className="flex flex-wrap gap-3 pt-2">
             <button
               type="button"
               onClick={onBack}
@@ -137,6 +138,7 @@ export function DetailView({ pokemon, onBack }: DetailViewProps) {
               <ArrowLeft className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1" />
               Regresar
             </button>
+            <CompareToggle pokemon={{ id: pokemon.id, name: pokemon.name, image: pokemon.image }} />
           </motion.div>
         </div>
       </div>

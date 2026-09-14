@@ -12,6 +12,7 @@ export default defineConfig(({ mode }) => {
     env.VITE_POKEMON_HISTORY_URL ?? `http://localhost:${remotePorts.pokemonHistory}`
 
   return {
+    base: env.VITE_BASE_PATH ?? '/',
     plugins: [
       react(),
       tailwindcss(),

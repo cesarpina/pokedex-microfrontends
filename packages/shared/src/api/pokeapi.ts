@@ -1,3 +1,4 @@
+import { TYPE_COLORS } from '../ui/type-colors'
 import { request } from './client'
 import { extractIdFromUrl, officialArtworkUrl, pickBestSprite } from './images'
 import type {
@@ -40,6 +41,22 @@ function toDetail(pokemon: PokemonResponse): PokemonDetail {
     types: pokemon.types.map((entry) => entry.type.name),
     stats: pokemon.stats.map((entry) => ({ name: entry.stat.name, value: entry.base_stat })),
     abilities: pokemon.abilities.map((entry) => entry.ability.name),
+  }
+}
+
+export interface PokedexOverview {
+  pokemonCount: number
+  types: string[]
+}
+
+export async function fetchPokedexOverview(signal?: AbortSignal): Promise<PokedexOverview> {
+  const [pokemon, types] = await Promise.all([
+    request<PokemonListResponse>('/pokemon?limit=1&offset=0', signal),
+    request<PokemonListResponse>('/type?limit=50', signal),
+  ])
+  return {
+    pokemonCount: pokemon.count,
+    types: types.results.map((type) => type.name).filter((type) => type in TYPE_COLORS),
   }
 }
 

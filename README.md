@@ -8,6 +8,8 @@ Reto técnico frontend: una Pokédex construida con **React 19 + Vite + Module F
 | `pokemon-detail` (MF 1)  | `3001` | Detalle del Pokémon (imagen SVG, tipos, stats, habilidades)                      |
 | `pokemon-history` (MF 2) | `3002` | Historial de Pokémon visitados con conteo de visitas y persistencia              |
 
+**Demo:** <https://cesarpina.github.io/pokedex-microfrontends/> (las tres apps publicadas en GitHub Pages).
+
 ![Home](docs/screenshots/home.png)
 
 <details>
@@ -20,8 +22,21 @@ Reto técnico frontend: una Pokédex construida con **React 19 + Vite + Module F
 |       ![Detalle](docs/screenshots/detalle.png)       | ![Historial](docs/screenshots/historial.png) |
 |              **Búsqueda sin resultado**              |           **Mobile, tema oscuro**            |
 | ![No encontrado](docs/screenshots/no-encontrado.png) | ![Mobile](docs/screenshots/mobile-dark.png)  |
+|                **Comparador (MF 1)**                 |             **Filtros por tipo**             |
+|    ![Comparador](docs/screenshots/comparador.png)    |   ![Filtros](docs/screenshots/filtros.png)   |
 
 </details>
+
+## Funcionalidades
+
+- **Login** con sesión persistida y rutas protegidas.
+- **Home** con estadísticas reales de la API (cuántos Pokémon y tipos existen), filtros por tipo y listado de 10 Pokémon por categoría.
+- **Buscador** en modal fullscreen: 30 Pokémon iniciales con scroll infinito, búsqueda por nombre exacto y sugerencias por fragmento.
+- **Detalle** (microfrontend 1): imagen SVG, tipos, estadísticas animadas, habilidades, altura y peso.
+- **Comparador** (microfrontend 1): se eligen dos Pokémon desde cualquier tarjeta o desde el detalle y se comparan estadística por estadística.
+- **Historial** (microfrontend 2): Pokémon visitados con conteo de visitas, persistente entre recargas.
+- **Toast** al recargar con el último Pokémon visitado.
+- **Tema claro / oscuro**, diseño responsive y estados de carga, error y vacío en cada bloque.
 
 ## Requisitos
 
@@ -67,12 +82,16 @@ pnpm build     # compila las tres apps en apps/*/dist
 pnpm preview   # sirve los builds en los mismos puertos (3000, 3001, 3002)
 ```
 
-Si los remotos se despliegan en otro dominio, el shell lee sus URLs de variables de entorno (ver `apps/shell/.env.example`):
+Si los remotos se despliegan en otro dominio o bajo un subdirectorio, el shell lee sus URLs de variables de entorno y las tres apps aceptan `VITE_BASE_PATH` (ver `apps/shell/.env.example`):
 
 ```
 VITE_POKEMON_DETAIL_URL=https://detail.midominio.com
 VITE_POKEMON_HISTORY_URL=https://history.midominio.com
 ```
+
+### Despliegue
+
+El workflow `.github/workflows/deploy.yml` publica la demo en GitHub Pages en cada push a `main`: construye los dos microfrontends con `VITE_BASE_PATH` bajo `/detail/` y `/history/`, construye el shell apuntando a esas URLs, junta los tres `dist` en una sola carpeta y copia `index.html` como `404.html` para que las rutas del SPA funcionen al recargar.
 
 ## Scripts
 
@@ -159,7 +178,11 @@ Elegí un contador en lugar de un timestamp porque dos visitas dentro del mismo 
 
 ### Home
 
-Muestra ocho tipos (`fire`, `water`, `grass`...) con los 10 primeros Pokémon de cada `GET /type/{type}`. Las categorías fuera del viewport se cargan al acercarse (lazy con `IntersectionObserver`) para no lanzar ocho peticiones de golpe. Cada sección maneja sus propios estados de carga, error y reintento.
+Al entrar se consulta `GET /pokemon?limit=1` (para el total de Pokémon) y `GET /type` (para la lista de tipos, descartando los que la API marca como desconocidos). Con eso se pintan las estadísticas de cabecera y los chips de filtro. Por defecto están activos ocho tipos (`fire`, `water`, `grass`...) y cada uno muestra los 10 primeros Pokémon de `GET /type/{type}`; el usuario puede activar o quitar cualquiera de los 18. Las categorías fuera del viewport se cargan al acercarse (lazy con `IntersectionObserver`) para no lanzar todas las peticiones de golpe, y cada sección maneja sus propios estados de carga, error y reintento.
+
+### Comparador
+
+Cada tarjeta y el detalle tienen un botón para añadir el Pokémon a la comparación. La selección vive en un store de Zustand (`pokedex.compare`, máximo dos, el más antiguo se descarta al elegir un tercero) que comparten shell y microfrontends. Mientras haya algo seleccionado, el shell muestra una bandeja flotante con los dos huecos y el botón "Comparar", que navega a `/compare/:a/:b`. La vista de comparación la expone el microfrontend de detalle como segundo módulo federado (`./PokemonCompare`) porque reutiliza sus componentes de imagen, tipos y barras; recibe los dos nombres por props y reutiliza las mismas queries cacheadas del detalle.
 
 ### Imágenes
 
@@ -177,6 +200,7 @@ Sin backend, cualquier usuario con contraseña de 4+ caracteres entra. El store 
 
 - Tests de componentes con Testing Library para el buscador y el toast, y un flujo end-to-end con Playwright.
 - Un manifiesto de remotos servido por configuración para poder cambiar la URL de un microfrontend sin rebuild del shell.
+- Comparar más de dos Pokémon y añadir la tabla de efectividad de tipos (`damage_relations`).
 - Prefetch del detalle al hacer _hover_ sobre una tarjeta.
 
 ## Licencia

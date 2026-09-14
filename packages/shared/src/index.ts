@@ -1,4 +1,5 @@
 export * from './api'
+export * from './compare'
 export * from './contracts'
 export * from './history'
 export * from './theme'

@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from 'motion/react'
 import { useLocation, useOutlet } from 'react-router'
 import { AmbientBackground } from '@/components/AmbientBackground'
 import { Header } from '@/components/Header'
+import { CompareTray } from '@/features/compare/CompareTray'
 import { SearchModal } from '@/features/search/SearchModal'
 import { LastVisitedToast } from '@/features/toast/LastVisitedToast'
 
@@ -29,6 +30,7 @@ export function AppLayout() {
       </main>
 
       <SearchModal />
+      <CompareTray />
       <LastVisitedToast />
     </div>
   )

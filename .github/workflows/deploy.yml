@@ -1,0 +1,66 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+env:
+  SITE_URL: https://cesarpina.github.io/pokedex-microfrontends
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Build microfrontends
+        run: |
+          VITE_BASE_PATH=/pokedex-microfrontends/detail/ pnpm --filter @pokedex/pokemon-detail build
+          VITE_BASE_PATH=/pokedex-microfrontends/history/ pnpm --filter @pokedex/pokemon-history build
+
+      - name: Build shell
+        run: pnpm --filter @pokedex/shell build
+        env:
+          VITE_BASE_PATH: /pokedex-microfrontends/
+          VITE_POKEMON_DETAIL_URL: ${{ env.SITE_URL }}/detail
+          VITE_POKEMON_HISTORY_URL: ${{ env.SITE_URL }}/history
+
+      - name: Assemble site
+        run: |
+          mkdir -p site/detail site/history
+          cp -r apps/shell/dist/. site/
+          cp -r apps/pokemon-detail/dist/. site/detail/
+          cp -r apps/pokemon-history/dist/. site/history/
+          cp site/index.html site/404.html
+          touch site/.nojekyll
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

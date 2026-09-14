@@ -1,11 +1,21 @@
-import { Search } from 'lucide-react'
-import { motion } from 'motion/react'
-import { FEATURED_TYPES } from '@pokedex/shared'
+import { Filter, Search } from 'lucide-react'
+import { AnimatePresence, motion } from 'motion/react'
+import { usePokedexOverview } from '@pokedex/shared'
+import { InlineError } from '@/components/InlineError'
 import { useSearchStore } from '@/features/search/search-store'
 import { CategorySection } from './CategorySection'
+import { useHomeFilterStore } from './home-filter-store'
+import { PokedexStats } from './PokedexStats'
+import { TypeFilter } from './TypeFilter'
 
 export function HomePage() {
   const openSearch = useSearchStore((state) => state.openSearch)
+  const overview = usePokedexOverview()
+  const selectedTypes = useHomeFilterStore((state) => state.types)
+  const knownTypes = overview.data?.types
+  const visibleTypes = knownTypes
+    ? selectedTypes.filter((type) => knownTypes.includes(type))
+    : selectedTypes
 
   return (
     <div className="space-y-10">
@@ -20,7 +30,7 @@ export function HomePage() {
             Explora la <span className="text-gradient">Pokédex</span>
           </h1>
           <p className="mt-1 text-muted">
-            Descubre Pokémon por categoría o búscalos por su nombre.
+            Descubre Pokémon por categoría, búscalos por su nombre o compáralos entre sí.
           </p>
         </div>
 
@@ -35,11 +45,46 @@ export function HomePage() {
             /
           </kbd>
         </button>
+
+        <PokedexStats overview={overview.data} />
+
+        <div className="space-y-3">
+          <h2 className="flex items-center gap-2 text-sm font-semibold text-muted">
+            <Filter className="h-4 w-4" />
+            Categorías
+          </h2>
+          {overview.isError ? (
+            <InlineError message="No pudimos cargar los tipos." onRetry={overview.refetch} />
+          ) : (
+            <TypeFilter types={overview.data?.types} />
+          )}
+        </div>
       </motion.section>
 
-      {FEATURED_TYPES.map((type, index) => (
-        <CategorySection key={type} type={type} index={index} />
-      ))}
+      <AnimatePresence mode="popLayout" initial={false}>
+        {visibleTypes.map((type, index) => (
+          <motion.div
+            key={type}
+            layout
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <CategorySection type={type} index={index} />
+          </motion.div>
+        ))}
+      </AnimatePresence>
+
+      {visibleTypes.length === 0 && (
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="rounded-2xl bg-surface p-10 text-center text-muted ring-1 ring-line"
+        >
+          Elige al menos un tipo para ver sus Pokémon.
+        </motion.p>
+      )}
     </div>
   )
 }

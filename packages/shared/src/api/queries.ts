@@ -1,12 +1,19 @@
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 import { ApiError } from './client'
-import { fetchPokemon, fetchPokemonByType, fetchPokemonIndex, fetchPokemonPage } from './pokeapi'
+import {
+  fetchPokedexOverview,
+  fetchPokemon,
+  fetchPokemonByType,
+  fetchPokemonIndex,
+  fetchPokemonPage,
+} from './pokeapi'
 
 export const pokemonKeys = {
   all: ['pokemon'] as const,
   byType: (type: string) => [...pokemonKeys.all, 'type', type] as const,
   list: () => [...pokemonKeys.all, 'list'] as const,
   index: () => [...pokemonKeys.all, 'index'] as const,
+  overview: () => [...pokemonKeys.all, 'overview'] as const,
   detail: (nameOrId: string | number) => [...pokemonKeys.all, 'detail', String(nameOrId)] as const,
 }
 
@@ -27,6 +34,14 @@ export function usePokemonList() {
     initialPageParam: 0,
     getNextPageParam: (lastPage) => lastPage.nextOffset,
     staleTime: ONE_HOUR,
+  })
+}
+
+export function usePokedexOverview() {
+  return useQuery({
+    queryKey: pokemonKeys.overview(),
+    queryFn: ({ signal }) => fetchPokedexOverview(signal),
+    staleTime: Infinity,
   })
 }
 
