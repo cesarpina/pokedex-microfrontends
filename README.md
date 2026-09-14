@@ -91,7 +91,7 @@ VITE_POKEMON_HISTORY_URL=https://history.midominio.com
 
 ### Despliegue
 
-El workflow `.github/workflows/deploy.yml` publica la demo en GitHub Pages en cada push a `main`: construye los dos microfrontends con `VITE_BASE_PATH` bajo `/detail/` y `/history/`, construye el shell apuntando a esas URLs, junta los tres `dist` en una sola carpeta y copia `index.html` como `404.html` para que las rutas del SPA funcionen al recargar.
+El workflow `.github/workflows/deploy.yml` publica la demo en GitHub Pages en cada push a `main`: construye los dos microfrontends con `VITE_BASE_PATH` bajo `/remotes/detail/` y `/remotes/history/` (fuera de las rutas del shell, para que `/history` no choque con una carpeta real), construye el shell apuntando a esas URLs, junta los tres `dist` en una sola carpeta y copia `index.html` como `404.html` para que las rutas del SPA funcionen al recargar.
 
 ## Scripts
 

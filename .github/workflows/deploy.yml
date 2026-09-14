@@ -32,22 +32,22 @@ jobs:
 
       - name: Build microfrontends
         run: |
-          VITE_BASE_PATH=/pokedex-microfrontends/detail/ pnpm --filter @pokedex/pokemon-detail build
-          VITE_BASE_PATH=/pokedex-microfrontends/history/ pnpm --filter @pokedex/pokemon-history build
+          VITE_BASE_PATH=/pokedex-microfrontends/remotes/detail/ pnpm --filter @pokedex/pokemon-detail build
+          VITE_BASE_PATH=/pokedex-microfrontends/remotes/history/ pnpm --filter @pokedex/pokemon-history build
 
       - name: Build shell
         run: pnpm --filter @pokedex/shell build
         env:
           VITE_BASE_PATH: /pokedex-microfrontends/
-          VITE_POKEMON_DETAIL_URL: ${{ env.SITE_URL }}/detail
-          VITE_POKEMON_HISTORY_URL: ${{ env.SITE_URL }}/history
+          VITE_POKEMON_DETAIL_URL: ${{ env.SITE_URL }}/remotes/detail
+          VITE_POKEMON_HISTORY_URL: ${{ env.SITE_URL }}/remotes/history
 
       - name: Assemble site
         run: |
-          mkdir -p site/detail site/history
+          mkdir -p site/remotes/detail site/remotes/history
           cp -r apps/shell/dist/. site/
-          cp -r apps/pokemon-detail/dist/. site/detail/
-          cp -r apps/pokemon-history/dist/. site/history/
+          cp -r apps/pokemon-detail/dist/. site/remotes/detail/
+          cp -r apps/pokemon-history/dist/. site/remotes/history/
           cp site/index.html site/404.html
           touch site/.nojekyll
 
